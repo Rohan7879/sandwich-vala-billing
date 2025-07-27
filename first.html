@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sandwich Vala Billing</title>
-    <!--Tailwind CSS CDN for styling-->
+    <!-- Tailwind CSS CDN for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
     <style>
@@ -591,8 +591,9 @@
   <body>
     <div class="container">
       <div class="header-branding flex items-center justify-center mb-8">
-        <!--Main display logo: Using img.jpg--><img
-          src="https://drive.google.com/uc?export=view&id=1s-T_3bf4fSmVLWeu1sJ4Lx6b-nUHFYD1"
+        <!-- Main display logo: Using img.jpg -->
+        <img
+          src="https://raw.githubusercontent.com/Rohan7879/sandwich-vala-billing/main/img.jpg"
           alt="Sandwichwala Logo"
           class="brand-logo"
           onerror="this.onerror=null;this.src='https://placehold.co/80x80/6366f1/ffffff?text=LOGO';"
@@ -623,7 +624,7 @@
       </div>
     </div>
 
-    <!--Custom Confirmation Modal Structure-->
+    <!-- Custom Confirmation Modal Structure -->
     <div id="custom-confirm-modal" class="custom-modal-overlay">
       <div class="custom-modal-content">
         <h3>Confirm Action</h3>
@@ -635,15 +636,15 @@
       </div>
     </div>
 
-    <!--Printable Bill Container (also serves as customer bill preview)-->
+    <!-- Printable Bill Container (also serves as customer bill preview) -->
     <div id="printable-bill-container" class="printable-bill-container">
-      <!--Content will be dynamically loaded here by generateBill()-->
+      <!-- Content will be dynamically loaded here by generateBill() -->
     </div>
 
-    <!--Hidden div for Kitchen Order Ticket (KOT) printing only-->
+    <!-- Hidden div for Kitchen Order Ticket (KOT) printing only -->
     <div id="kitchen-print-output" style="display: none"></div>
 
-    <!--Hidden div for Customer Bill printing only (when printing directly from the modal, this will be targeted)-->
+    <!-- Hidden div for Customer Bill printing only (when printing directly from the modal, this will be targeted) -->
     <div id="customer-print-output" style="display: none"></div>
 
     <script type="module">
@@ -828,7 +829,8 @@
         let customerBillHTML = `
             <div class="bill-content">
                 <div class="header">
-                    <!--Image logo for print compatibility--><img src="YOUR_GITHUB_RAW_IMAGE_URL_HERE" alt="Sandwichwala Logo" class="brand-logo-print" onerror="this.onerror=null;this.src='https://placehold.co/50x50/6366f1/ffffff?text=LOGO';" />
+                    <!-- Image logo for print compatibility -->
+                    <img src="https://raw.githubusercontent.com/Rohan7879/sandwich-vala-billing/main/img.jpg" alt="Sandwichwala Logo" class="brand-logo-print" onerror="this.onerror=null;this.src='https://placehold.co/50x50/6366f1/ffffff?text=LOGO';" />
                     <h2>Sandwich Vala</h2>
                     <p>Shop No. 5, Kalwa Chowk,</p>
                     <p>Junagadh, Gujarat</p>
