@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sandwich Vala Billing</title>
+    <!--Tailwind CSS CDN for styling-->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      /* Custom styles for a modern look */
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #e5e7eb; /* Lighter gray background */
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+        padding: 20px;
+      }
+      .container {
+        background-color: #ffffff;
+        border-radius: 16px; /* More rounded corners */
+        box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.15), 0 5px 10px -5px rgba(0, 0, 0, 0.08); /* Stronger shadow */
+        width: 100%;
+        max-width: 960px; /* Slightly wider */
+        padding: 40px; /* More padding */
+        display: flex;
+        flex-direction: column;
+        gap: 40px; /* More space between sections */
+        margin-top: 20px; /* Some top margin */
+        margin-bottom: 20px; /* Some bottom margin */
+        transition: filter 0.3s ease-in-out; /* Added for smooth blur transition */
+      }
+      @media (min-width: 768px) {
+        .container {
+          flex-direction: row;
+        }
+        .menu-section,
+        .bill-section {
+          flex: 1;
+        }
+      }
+      h1 {
+        color: #1f2937;
+        text-align: center;
+        margin-bottom: 20px; /* Space below title */
+      }
+      h2 {
+        color: #374151;
+        margin-bottom: 20px; /* More space below section titles */
+        font-weight: 700; /* Bolder section titles */
+      }
+      .menu-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0; /* More padding for items */
+        border-bottom: 1px dashed #d1d5db; /* Slightly darker dashed line */
+      }
+      .menu-item:last-child {
+        border-bottom: none;
+      }
+      .bill-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px dashed #d1d5db;
+      }
+      .bill-item:last-child {
+        border-bottom: none;
+      }
+
+      /* Quantity controls styling */
+      .quantity-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px; /* More space between buttons and display */
+      }
+      .quantity-button {
+        background-color: #6366f1; /* Indigo color for buttons */
+        color: white;
+        border: none;
+        border-radius: 8px; /* More rounded buttons */
+        width: 36px; /* Slightly larger buttons */
+        height: 36px;
+        font-size: 1.3rem; /* Larger font for +/- */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Small shadow for buttons */
+      }
+      .quantity-button:hover {
+        background-color: #4f46e5; /* Darker indigo on hover */
+        transform: translateY(-1px); /* Slight lift effect */
+      }
+      .quantity-button:active {
+        transform: translateY(1px); /* Press effect */
+      }
+      .quantity-display {
+        width: 50px; /* Wider for better display */
+        text-align: center;
+        font-weight: 700; /* Bolder quantity text */
+        color: #374151;
+        font-size: 1.1rem;
+      }
+
+      .button {
+        padding: 14px 24px; /* More padding for main buttons */
+        border-radius: 10px; /* More rounded buttons */
+        font-weight: 700; /* Bolder text */
+        cursor: pointer;
+        transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out;
+        width: 100%;
+        text-transform: uppercase; /* Uppercase text */
+        letter-spacing: 0.05em; /* Spacing for uppercase */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .button-primary {
+        background-color: #4f46e5;
+        color: #ffffff;
+      }
+      .button-primary:hover {
+        background-color: #4338ca;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+      }
+      .button-primary:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .button-secondary {
+        background-color: #9ca3af; /* Lighter gray for secondary */
+        color: #374151; /* Darker text for contrast */
+      }
+      .button-secondary:hover {
+        background-color: #6b7280;
+        color: #ffffff; /* White text on darker hover */
+        transform: translateY(-2px);
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+      }
+      .button-secondary:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .bill-summary {
+        margin-top: 30px; /* More margin */
+        padding-top: 25px;
+        border-top: 1px dashed #d1d5db;
+      }
+      .bill-summary div {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0; /* More padding */
+        font-size: 1.1rem;
+      }
+      .bill-total {
+        font-weight: 800; /* Even bolder total */
+        font-size: 1.5rem; /* Larger total font size */
+        padding-top: 15px;
+        border-top: 2px solid #e5e7eb; /* Solid, thicker border for total */
+        margin-top: 15px;
+        color: #1f2937;
+      }
+
+      /* Class to blur the main container */
+      .blur-background {
+        filter: blur(5px);
+        pointer-events: none; /* Prevents clicking on the blurred background */
+      }
+
+      /* Styles for the bill modal overlay */
+      .printable-bill-container {
+        display: none; /* Keep it hidden by default */
+        position: fixed; /* Position it over everything */
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      /* Styles for the actual receipt content inside the modal (Customer Bill Preview) */
+      .bill-print-content {
+        background-color: #ffffff;
+        font-family: monospace;
+        font-size: 13px;
+        line-height: 1.5;
+        color: #1f2937;
+        padding: 30px;
+        border-radius: 8px;
+        width: 100%;
+        max-width: 420px; /* Adjust width as needed */
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+        position: relative; /* Needed for the close button */
+        display: flex; /* Use flexbox for internal layout */
+        flex-direction: column;
+      }
+
+      /* Style for the bill modal close button */
+      .bill-close-button {
+        color: #6b7280;
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-size: 32px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .bill-close-button:hover {
+        color: #1f2937;
+      }
+
+      /* Logo styling */
+      .brand-logo {
+        width: 80px; /* Size of the logo */
+        height: 80px;
+        object-fit: cover;
+        border-radius: 50%; /* Circular logo */
+        margin-right: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Custom Confirmation Modal */
+      .custom-modal-overlay {
+        display: none; /* Hidden by default */
+        position: fixed;
+        z-index: 2000; /* Higher than other modals */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+        justify-content: center;
+        align-items: center;
+      }
+
+      .custom-modal-content {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+        transform: translateY(-20px); /* Slight lift animation */
+        animation: fadeIn 0.3s forwards;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .custom-modal-content h3 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      .custom-modal-content .modal-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 25px;
+      }
+
+      .custom-modal-content .modal-button {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .custom-modal-content .modal-button.confirm {
+        background-color: #ef4444; /* Red for destructive action */
+        color: white;
+      }
+
+      .custom-modal-content .modal-button.confirm:hover {
+        background-color: #dc2626;
+        transform: translateY(-1px);
+      }
+
+      .custom-modal-content .modal-button.cancel {
+        background-color: #e5e7eb; /* Light gray for cancel */
+        color: #374151;
+      }
+
+      .custom-modal-content .modal-button.cancel:hover {
+        background-color: #d1d5db;
+        transform: translateY(-1px);
+      }
+
+      /* --- Print Layouts --- */
+      @media print {
+        /* Reset default print margins and make body fill the page */
+        @page {
+          margin: 15mm; /* Global page margins for A4 */
+        }
+        html,
+        body {
+          margin: 0;
+          padding: 0;
+          width: 100vw;
+          height: 100vh;
+          display: block; /* Ensure body behaves as a block for layout */
+          /* Hide body content, but allow print output divs to override */
+          visibility: hidden;
+          overflow: hidden; /* Prevent extra scrollbars in print */
+        }
+
+        /* Hide all non-print-output direct children of body */
+        body > *:not(#customer-print-output):not(#kitchen-print-output) {
+          display: none !important;
+        }
+
+        /* Make only the print output containers visible */
+        #customer-print-output,
+        #kitchen-print-output {
+          visibility: visible; /* Override body visibility */
+          display: block !important; /* Ensure it's displayed for printing */
+          position: static; /* Use normal document flow */
+          margin: 0 auto; /* Center on A4 page (within @page margins) */
+          padding: 0; /* Padding will be internal to bill/kot-content */
+          width: 100%; /* Take full width of print area (within @page margins) */
+          height: auto; /* Allow content to define height */
+          background-color: white;
+          box-shadow: none; /* No shadow on print */
+          box-sizing: border-box; /* Include padding in width */
+        }
+
+        /* Styles for Customer Bill Printout content */
+        #customer-print-output .bill-content {
+          width: 100%;
+          margin: 0;
+          padding: 10mm; /* Internal padding for content */
+          box-shadow: none;
+          border-radius: 0;
+          font-family: "Inter", sans-serif; /* Use Inter for better readability on A4 */
+          font-size: 12px; /* Adjusted font size for A4 */
+          line-height: 1.4; /* Better line spacing for A4 */
+          color: black;
+          box-sizing: border-box; /* Include padding in width */
+          overflow-wrap: break-word; /* Ensure long words break */
+        }
+
+        /* Hide modal controls on print (for customer bill preview) */
+        .printable-bill-container .print-buttons,
+        .printable-bill-container .bill-close-button {
+          display: none !important;
+        }
+
+        /* Customer Bill Header Styling */
+        #customer-print-output .header {
+          text-align: center;
+          margin-bottom: 15px; /* More margin for A4 */
+          padding-bottom: 8px; /* More padding for A4 */
+          border-bottom: 1px dashed black; /* Dashed line separator */
+        }
+        #customer-print-output .header .brand-logo-print {
+          width: 60px; /* Larger size for print logo on A4 */
+          height: 60px;
+          object-fit: cover;
+          border-radius: 50%;
+          margin: 0 auto 5px auto; /* Center the image and increase margin */
+          display: block; /* Ensure it takes its own line */
+        }
+        #customer-print-output .header h2 {
+          font-size: 20px; /* Larger heading for print on A4 */
+          font-weight: bold;
+          margin: 0;
+          line-height: 1.2; /* Tighter line height */
+        }
+        #customer-print-output .header p {
+          font-size: 10px; /* Better font size for address/phone on A4 */
+          margin: 2px 0; /* Some margin */
+          word-wrap: break-word; /* Ensure long addresses wrap */
+        }
+        #customer-print-output .header .sales-receipt {
+          font-size: 11px; /* Larger font */
+          font-weight: bold;
+          margin-top: 10px; /* More margin */
+          margin-bottom: 5px;
+          text-transform: uppercase;
+          border-top: 1px dashed black; /* Dashed line above sales receipt */
+          padding-top: 5px;
+        }
+
+        /* Customer Bill Info Styling */
+        #customer-print-output .bill-info {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 10px; /* More margin */
+          font-size: 10px; /* Better font size */
+          border-bottom: 1px dashed black; /* Dashed line below info */
+          padding-bottom: 5px;
+        }
+        #customer-print-output .bill-info span {
+          white-space: normal; /* Allow date/time to wrap on A4 */
+        }
+
+        /* Customer Bill Item Table Styling */
+        #customer-print-output .item-table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-bottom: 10px; /* More margin */
+          table-layout: fixed; /* Fix table layout to prevent overflow */
+        }
+        #customer-print-output .item-table th,
+        #customer-print-output .item-table td {
+          padding: 5px 0; /* More padding for A4 */
+          font-size: 11px; /* Better font size */
+          border-bottom: 1px dotted #ccc; /* Lighter dotted line for items */
+          word-wrap: break-word; /* Ensure item names wrap */
+        }
+        #customer-print-output .item-table thead th {
+          text-align: left;
+          border-bottom: 1px solid black;
+          text-transform: uppercase;
+          font-weight: bold;
+        }
+        /* Align columns correctly and set widths for A4 */
+        #customer-print-output .item-table .item-col {
+          width: 55%; /* Item name takes more space */
+          text-align: left;
+        }
+        #customer-print-output .item-table .qty-col {
+          width: 10%; /* Quantity column */
+          text-align: center;
+        }
+        #customer-print-output .item-table .price-col {
+          width: 17.5%; /* Price column */
+          text-align: right;
+        }
+        #customer-print-output .item-table .total-col {
+          width: 17.5%; /* Total column */
+          text-align: right;
+        }
+
+        /* Customer Bill Summary Section Styling */
+        #customer-print-output .summary {
+          margin-top: 15px; /* More margin */
+          padding-top: 10px; /* More padding */
+          border-top: 1px dashed black; /* Dashed line above summary */
+        }
+        #customer-print-output .summary .summary-item {
+          display: flex;
+          justify-content: space-between;
+          margin: 5px 0; /* More margin */
+          font-size: 12px; /* Larger font */
+        }
+        #customer-print-output .summary .summary-total {
+          font-size: 14px; /* Larger total */
+          font-weight: bold;
+          margin-top: 10px; /* More margin */
+          border-top: 1px solid black; /* Solid line for total */
+          padding-top: 8px;
+        }
+
+        /* Customer Bill Footer & Signature Styling */
+        #customer-print-output .footer {
+          text-align: center;
+          margin-top: 20px; /* More margin */
+          padding-top: 10px; /* More padding */
+          border-top: 1px dashed black; /* Dashed line above footer */
+        }
+        #customer-print-output .footer p {
+          font-size: 10px; /* Better font size */
+          margin: 3px 0; /* Some margin */
+        }
+        #customer-print-output .signature-area {
+          margin-top: 25px; /* More margin */
+          display: flex;
+          flex-direction: row; /* Layout signatures side-by-side on A4 */
+          justify-content: space-around; /* Distribute space evenly */
+          align-items: flex-end; /* Align to bottom */
+          font-size: 10px; /* Better font size */
+          gap: 20px; /* Gap between signatures */
+        }
+        #customer-print-output .signature-line {
+          border-top: 1px solid black;
+          width: 45%; /* Adjusted width for side-by-side */
+          padding-top: 5px; /* More padding */
+          text-align: center;
+        }
+
+        /* Styles for Kitchen Order Ticket (KOT) Printout content */
+        #kitchen-print-output {
+          /* Position relative to the customer bill on the same page */
+          position: static;
+          margin: 20mm auto 0 auto; /* Add margin above KOT to separate from customer bill */
+          padding: 10mm; /* Internal padding for content */
+          width: 100%; /* Take full width within @page margins */
+          height: auto;
+          background-color: white;
+          box-shadow: none;
+          box-sizing: border-box;
+          font-family: "Inter", sans-serif; /* Use Inter for better readability on A4 */
+          font-size: 12px;
+          line-height: 1.4;
+          color: black;
+          overflow-wrap: break-word; /* Ensure long words break */
+        }
+
+        #kitchen-print-output .kot-header {
+          text-align: center;
+          margin-bottom: 15px; /* More margin */
+          padding-bottom: 8px; /* More padding */
+          border-bottom: 1px dashed black;
+          font-weight: bold;
+          font-size: 16px; /* Larger font for A4 */
+        }
+
+        #kitchen-print-output .kot-info {
+          font-size: 11px; /* Larger font for A4 */
+          margin-bottom: 10px; /* More margin */
+          padding-bottom: 5px; /* More padding */
+          border-bottom: 1px dashed black;
+        }
+        #kitchen-print-output .kot-info p {
+          margin: 3px 0; /* More margin */
+          display: flex;
+          justify-content: space-between;
+        }
+        #kitchen-print-output .kot-info span.label {
+          font-weight: bold;
+          margin-right: 10px; /* More margin */
+        }
+        #kitchen-print-output .kot-info span.value {
+          flex-grow: 1;
+          text-align: right;
+        }
+
+        #kitchen-print-output .kot-item-table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 10px; /* More margin */
+        }
+        #kitchen-print-output .kot-item-table th,
+        #kitchen-print-output .kot-item-table td {
+          padding: 5px 0; /* More padding */
+          font-size: 11px; /* Larger font */
+          border-bottom: 1px dotted #ccc;
+          word-wrap: break-word;
+          vertical-align: top; /* Align items to top */
+        }
+        #kitchen-print-output .kot-item-table th {
+          text-align: left;
+          border-bottom: 1px solid black;
+          text-transform: uppercase;
+          font-weight: bold;
+        }
+        #kitchen-print-output .kot-item-table .qty-col-kot {
+          width: 15%; /* Adjusted width for A4 */
+          text-align: center;
+        }
+        #kitchen-print-output .kot-item-table .item-col-kot {
+          width: 85%; /* Adjusted width for A4 */
+          text-align: left;
+        }
+
+        #kitchen-print-output .kot-footer {
+          text-align: center;
+          margin-top: 20px; /* More margin */
+          padding-top: 10px; /* More padding */
+          border-top: 1px dashed black;
+          font-size: 10px; /* Larger font */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header-branding flex items-center justify-center mb-8">
+        <!--Main display logo: Using img.jpg--><img
+          src="https://drive.google.com/uc?export=view&id=1s-T_3bf4fSmVLWeu1sJ4Lx6b-nUHFYD1"
+          alt="Sandwichwala Logo"
+          class="brand-logo"
+          onerror="this.onerror=null;this.src='https://placehold.co/80x80/6366f1/ffffff?text=LOGO';"
+        />
+        <h1 class="text-5xl font-extrabold text-gray-900">Sandwich Vala</h1>
+      </div>
+
+      <div class="menu-section flex flex-col p-8 border border-gray-200 rounded-lg shadow-sm">
+        <h2 class="text-3xl font-semibold mb-4">Our Menu</h2>
+        <div id="menu-list" class="space-y-4"></div>
+      </div>
+
+      <div class="bill-section flex flex-col p-8 border border-gray-200 rounded-lg shadow-sm">
+        <h2 class="text-3xl font-semibold mb-4">Current Order</h2>
+        <div id="bill-items" class="flex-grow space-y-4">
+          <p id="no-items-message" class="text-gray-500 text-center text-lg">No items selected yet.</p>
+        </div>
+
+        <div id="bill-summary" class="bill-summary">
+          <div><span class="text-gray-700">Subtotal:</span> <span id="subtotal" class="font-medium">₹0.00</span></div>
+          <div class="bill-total"><span>Total:</span> <span id="total">₹0.00</span></div>
+        </div>
+
+        <div class="flex flex-col gap-5 mt-8">
+          <button id="generate-bill-btn" class="button button-primary">Generate Bill</button>
+          <button id="clear-order-btn" class="button button-secondary">Clear Order</button>
+        </div>
+      </div>
+    </div>
+
+    <!--Custom Confirmation Modal Structure-->
+    <div id="custom-confirm-modal" class="custom-modal-overlay">
+      <div class="custom-modal-content">
+        <h3>Confirm Action</h3>
+        <p>Are you sure you want to clear the entire order?</p>
+        <div class="modal-buttons">
+          <button id="confirm-yes" class="modal-button confirm">Yes, Clear</button>
+          <button id="confirm-no" class="modal-button cancel">No, Keep</button>
+        </div>
+      </div>
+    </div>
+
+    <!--Printable Bill Container (also serves as customer bill preview)-->
+    <div id="printable-bill-container" class="printable-bill-container">
+      <!--Content will be dynamically loaded here by generateBill()-->
+    </div>
+
+    <!--Hidden div for Kitchen Order Ticket (KOT) printing only-->
+    <div id="kitchen-print-output" style="display: none"></div>
+
+    <!--Hidden div for Customer Bill printing only (when printing directly from the modal, this will be targeted)-->
+    <div id="customer-print-output" style="display: none"></div>
+
+    <script type="module">
+      // Define menu items with their prices (hardcoded)
+      const menu = [
+        { id: "aloo-matar-grilled", name: "Aloo Matar Grilled", price: 30 },
+        { id: "aloo-matar-veg-grilled", name: "Aloo Matar Veg Grilled", price: 40 },
+        { id: "aloo-matar-cheese-grilled", name: "Aloo Matar Cheese Grilled", price: 50 },
+        { id: "aloo-matar-veg-cheese-grilled", name: "Aloo Matar Veg Cheese Grilled", price: 60 },
+        { id: "cheese-chutney-garlic", name: "Cheese Chutney Garlic", price: 80 },
+        { id: "cheese-garlic-garlic", name: "Cheese Garlic Garlic", price: 80 },
+        { id: "cheese-corn-garlic", name: "Cheese Corn Garlic", price: 80 },
+        { id: "cheese-chili-garlic", name: "Cheese Chili Garlic", price: 80 },
+        { id: "vegetable-sandwich", name: "Vegetable Sandwich", price: 70 },
+        { id: "vegetable-grilled-sandwich", name: "Vegetable Grilled Sandwich", price: 80 },
+        { id: "veg-cheese-sandwich", name: "Veg Cheese Sandwich", price: 90 },
+        { id: "veg-cheese-grilled-sandwich", name: "Veg Cheese Grilled Sandwich", price: 100 },
+        { id: "classic-club", name: "Classic Club", price: 110 },
+        { id: "schezwan-club", name: "Schezwan Club", price: 120 },
+        { id: "italian-club", name: "Italian Club", price: 130 },
+        { id: "tandoori-club", name: "Tandoori Club", price: 140 },
+        { id: "mexican-club", name: "Mexican Club", price: 150 },
+      ];
+
+      // Store current order items and quantities
+      const order = {};
+
+      // Get DOM elements
+      const menuList = document.getElementById("menu-list");
+      const billItemsContainer = document.getElementById("bill-items");
+      const noItemsMessage = document.getElementById("no-items-message");
+      const subtotalSpan = document.getElementById("subtotal");
+      const totalSpan = document.getElementById("total");
+      const generateBillBtn = document.getElementById("generate-bill-btn");
+      const clearOrderBtn = document.getElementById("clear-order-btn");
+      const printableBillContainer = document.getElementById("printable-bill-container");
+      const mainContainer = document.querySelector(".container");
+      const customerPrintOutput = document.getElementById("customer-print-output"); // New print area for customer bill
+      const kitchenPrintOutput = document.getElementById("kitchen-print-output"); // New print area for KOT
+
+      // Custom confirmation modal elements
+      const customConfirmModal = document.getElementById("custom-confirm-modal");
+      const confirmYesBtn = document.getElementById("confirm-yes");
+      const confirmNoBtn = document.getElementById("confirm-no");
+
+      let resolveConfirmPromise; // To hold the resolve function for the promise
+
+      // Function to show custom confirmation dialog
+      function showCustomConfirm(message) {
+        // Update the message in the modal
+        customConfirmModal.querySelector("p").textContent = message;
+        customConfirmModal.style.display = "flex";
+        mainContainer.classList.add("blur-background");
+        return new Promise((resolve) => {
+          resolveConfirmPromise = resolve;
+        });
+      }
+
+      // Event listeners for custom confirmation buttons
+      confirmYesBtn.addEventListener("click", () => {
+        customConfirmModal.style.display = "none";
+        mainContainer.classList.remove("blur-background");
+        if (resolveConfirmPromise) {
+          resolveConfirmPromise(true);
+        }
+      });
+
+      confirmNoBtn.addEventListener("click", () => {
+        customConfirmModal.style.display = "none";
+        mainContainer.classList.remove("blur-background");
+        if (resolveConfirmPromise) {
+          resolveConfirmPromise(false);
+        }
+      });
+
+      // Function to render the menu items dynamically
+      function renderMenu() {
+        menuList.innerHTML = "";
+        menu.forEach((item) => {
+          const currentQuantity = order[item.id] ? order[item.id].quantity : 0;
+          const menuItemDiv = document.createElement("div");
+          menuItemDiv.className = "menu-item";
+          menuItemDiv.innerHTML = `
+              <span class="text-lg font-medium">${item.name}</span>
+              <span class="text-gray-700">₹${item.price.toFixed(2)}</span>
+              <div class="quantity-controls">
+                  <button class="quantity-button remove-btn" data-id="${item.id}">-</button>
+                  <span class="quantity-display" id="qty-display-${item.id}">${currentQuantity}</span>
+                  <button class="quantity-button add-btn" data-id="${item.id}">+</button>
+              </div>
+            `;
+          menuList.appendChild(menuItemDiv);
+        });
+        document.querySelectorAll(".add-btn").forEach((button) => {
+          button.addEventListener("click", adjustQuantity);
+        });
+        document.querySelectorAll(".remove-btn").forEach((button) => {
+          button.addEventListener("click", adjustQuantity);
+        });
+      }
+
+      // Function to adjust quantity based on button click
+      function adjustQuantity(event) {
+        const itemId = event.target.dataset.id;
+        const isAdd = event.target.classList.contains("add-btn");
+        const quantityDisplay = document.getElementById(`qty-display-${itemId}`);
+        let currentQuantity = parseInt(quantityDisplay.textContent);
+
+        if (isAdd) {
+          currentQuantity++;
+        } else {
+          currentQuantity--;
+        }
+
+        if (currentQuantity < 0) {
+          currentQuantity = 0;
+        }
+
+        quantityDisplay.textContent = currentQuantity;
+        updateOrderFromButtons(itemId, currentQuantity);
+      }
+
+      // Function to update the order based on button changes
+      function updateOrderFromButtons(itemId, quantity) {
+        const item = menu.find((i) => i.id === itemId);
+        if (!item) {
+          console.error(`Item with ID ${itemId} not found.`);
+          return;
+        }
+        if (quantity > 0) {
+          order[itemId] = { ...item, quantity: quantity };
+        } else {
+          delete order[itemId];
+        }
+        renderBill();
+      }
+
+      // Function to render the bill items and summary on the main page
+      function renderBill() {
+        billItemsContainer.innerHTML = "";
+        let subtotal = 0;
+        let hasItems = false;
+
+        for (const itemId in order) {
+          hasItems = true;
+          const item = order[itemId];
+          const itemTotal = item.price * item.quantity;
+          subtotal += itemTotal;
+          const billItemDiv = document.createElement("div");
+          billItemDiv.className = "bill-item";
+          billItemDiv.innerHTML = `
+              <span class="font-medium">${item.name} (x${item.quantity})</span>
+              <span>₹${itemTotal.toFixed(2)}</span>
+            `;
+          billItemsContainer.appendChild(billItemDiv);
+        }
+
+        if (hasItems) {
+          noItemsMessage.style.display = "none";
+        } else {
+          noItemsMessage.style.display = "block";
+        }
+
+        const total = subtotal;
+        subtotalSpan.textContent = `₹${subtotal.toFixed(2)}`;
+        totalSpan.textContent = `₹${total.toFixed(2)}`;
+      }
+
+      /**
+       * Generates the HTML content for the customer bill.
+       * @returns {string} The HTML string for the customer bill.
+       */
+      function generateCustomerBillContent() {
+        let lastBillNo = parseInt(localStorage.getItem("lastBillNo")) || 0;
+        // Do not increment here, increment only when actually printing a bill
+        const billNo = `SW-${String(lastBillNo + 1).padStart(6, "0")}`;
+
+        const now = new Date();
+        const billDate = now.toLocaleDateString("en-GB"); // DD/MM/YYYY
+        const billTime = now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
+
+        let customerBillHTML = `
+            <div class="bill-content">
+                <div class="header">
+                    <!--Image logo for print compatibility--><img src="YOUR_GITHUB_RAW_IMAGE_URL_HERE" alt="Sandwichwala Logo" class="brand-logo-print" onerror="this.onerror=null;this.src='https://placehold.co/50x50/6366f1/ffffff?text=LOGO';" />
+                    <h2>Sandwich Vala</h2>
+                    <p>Shop No. 5, Kalwa Chowk,</p>
+                    <p>Junagadh, Gujarat</p>
+                    <p>Phone: +91 98765 43210</p>
+                    <p class="sales-receipt">Sales Receipt</p>
+                </div>
+                
+                <div class="bill-info">
+                    <span>Bill No: ${billNo}</span>
+                    <span>Date: ${billDate} ${billTime}</span>
+                </div>
+        
+                <table class="item-table">
+                    <thead>
+                        <tr>
+                            <th class="item-col">Item</th>
+                            <th class="qty-col">Qty</th>
+                            <th class="price-col">Price</th>
+                            <th class="total-col">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+          `;
+
+        let subtotal = 0;
+        for (const itemId in order) {
+          const item = order[itemId];
+          const itemTotal = item.price * item.quantity;
+          subtotal += itemTotal;
+          customerBillHTML += `
+                <tr>
+                    <td class="item-col">${item.name}</td>
+                    <td class="qty-col">${item.quantity}</td>
+                    <td class="price-col">${item.price.toFixed(2)}</td>
+                    <td class="total-col">${itemTotal.toFixed(2)}</td>
+                </tr>
+            `;
+        }
+
+        const total = subtotal;
+
+        customerBillHTML += `
+                </tbody>
+            </table>
+            <div class="summary">
+                <div class="summary-item">
+                    <span>Subtotal:</span>
+                    <span>₹${subtotal.toFixed(2)}</span>
+                </div>
+                <div class="summary-item summary-total">
+                    <span>Total:</span>
+                    <span>₹${total.toFixed(2)}</span>
+                </div>
+            </div>
+            <div class="footer">
+                <p>Thank you for your visit!</p>
+                <p>Please come again!</p>
+            </div>
+            <div class="signature-area">
+                <div class="signature-line">Customer Signature</div>
+                <div class="signature-line">Authorized Signature</div>
+            </div>
+        </div>
+          `;
+        return customerBillHTML;
+      }
+
+      /**
+       * Generates the HTML content for the Kitchen Order Ticket (KOT).
+       * @returns {string} The HTML string for the KOT.
+       */
+      function generateKitchenOrderContent() {
+        let lastKOTNo = parseInt(localStorage.getItem("lastKOTNo")) || 0;
+        // Do not increment here, increment only when actually printing a KOT
+        const kotNo = `KOT-${String(lastKOTNo + 1).padStart(3, "0")}`;
+
+        const now = new Date();
+        const kotDate = now.toLocaleDateString("en-GB"); // DD/MM/YYYY
+        const kotTime = now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false }); // 24-hour format for kitchen
+
+        // For demonstration, let's hardcode a table number and dining type.
+        // In a real app, these would come from user input or a selection.
+        const tableNo = 3;
+        const diningType = "Dine In";
+
+        let kotHTML = `
+            <div class="kot-content">
+                <div class="kot-header">
+                    <p>Running Table</p>
+                </div>
+                <div class="kot-info">
+                    <p><span class="label">Date:</span> <span class="value">${kotDate} ${kotTime}</span></p>
+                    <p><span class="label">KOT:</span> <span class="value">${kotNo}</span></p>
+                    <p><span class="label">Type:</span> <span class="value">${diningType}</span></p>
+                    <p><span class="label">Table No:</span> <span class="value">${tableNo}</span></p>
+                </div>
+                <table class="kot-item-table">
+                    <thead>
+                        <tr>
+                            <th class="qty-col-kot">Qty.</th>
+                            <th class="item-col-kot">Item</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+          `;
+
+        for (const itemId in order) {
+          const item = order[itemId];
+          kotHTML += `
+                <tr>
+                    <td class="qty-col-kot">${item.quantity}</td>
+                    <td class="item-col-kot">${item.name}</td>
+                </tr>
+            `;
+        }
+
+        kotHTML += `
+                    </tbody>
+                </table>
+                <div class="kot-footer">
+                    <p>Order for Table ${tableNo}</p>
+                    <p>--------------------</p>
+                </div>
+            </div>
+          `;
+        return kotHTML;
+      }
+
+      // Function to generate and display the bill content in the modal
+      function generateBill() {
+        if (Object.keys(order).length === 0) {
+          showCustomConfirm("Please add items to the order before generating a bill.");
+          return;
+        }
+
+        mainContainer.classList.add("blur-background");
+
+        // Generate customer bill HTML for preview in the modal
+        const customerBillContent = generateCustomerBillContent();
+
+        // Create the modal content with customer bill preview and print buttons
+        let modalDisplayHTML = `
+            <div class="bill-print-content">
+                <span class="bill-close-button">&times;</span>
+                <div id="customer-bill-preview-area">
+                    ${customerBillContent}
+                </div>
+                <div class="print-buttons flex flex-col gap-4 mt-8">
+                    <button id="print-customer-btn" class="button button-primary">Print Customer Copy</button>
+                    <button id="print-kitchen-btn" class="button button-secondary">Print Kitchen Order</button>
+                    <button id="print-both-btn" class="button button-primary" style="background-color: #10B981;">Print Both Copies</button>
+                </div>
+            </div>
+        `;
+
+        printableBillContainer.innerHTML = modalDisplayHTML;
+        printableBillContainer.style.display = "flex";
+
+        // Add event listeners to the new buttons in the modal
+        document.getElementById("print-customer-btn").addEventListener("click", printCustomerBill);
+        document.getElementById("print-kitchen-btn").addEventListener("click", printKitchenOrder);
+        document.getElementById("print-both-btn").addEventListener("click", printBothCopies); // New event listener for "Print Both Copies"
+      }
+
+      /**
+       * Triggers printing of the Customer Bill.
+       * This uses the content already loaded in the modal's preview area.
+       */
+      function printCustomerBill() {
+        // Increment bill number only when actually printing
+        let lastBillNo = parseInt(localStorage.getItem("lastBillNo")) || 0;
+        localStorage.setItem("lastBillNo", lastBillNo + 1);
+
+        // Hide the modal and main container
+        printableBillContainer.style.display = "none";
+        mainContainer.style.display = "none";
+
+        // Copy the customer bill content to the dedicated print output div
+        customerPrintOutput.innerHTML = generateCustomerBillContent();
+        customerPrintOutput.style.display = "block"; // Make it visible for printing
+        kitchenPrintOutput.style.display = "none"; // Ensure KOT is hidden
+
+        window.print();
+
+        // Revert display after printing
+        setTimeout(() => {
+          customerPrintOutput.style.display = "none";
+          customerPrintOutput.innerHTML = ""; // Clear content
+          mainContainer.style.display = "flex"; // Revert main container display
+          mainContainer.classList.remove("blur-background");
+        }, 500); // Small delay
+      }
+
+      /**
+       * Triggers printing of the Kitchen Order Ticket (KOT).
+       * This renders KOT content into a separate hidden div for printing.
+       */
+      function printKitchenOrder() {
+        // Increment KOT number only when actually printing
+        let lastKOTNo = parseInt(localStorage.getItem("lastKOTNo")) || 0;
+        localStorage.setItem("lastKOTNo", lastKOTNo + 1);
+
+        // Hide the modal and main container
+        printableBillContainer.style.display = "none";
+        mainContainer.style.display = "none";
+
+        // Generate KOT content and put it into the hidden KOT print div
+        kitchenPrintOutput.innerHTML = generateKitchenOrderContent();
+        kitchenPrintOutput.style.display = "block"; // Make it visible for printing
+        customerPrintOutput.style.display = "none"; // Ensure Customer Bill is hidden
+
+        window.print();
+
+        // Revert display after printing
+        setTimeout(() => {
+          kitchenPrintOutput.style.display = "none";
+          kitchenPrintOutput.innerHTML = ""; // Clear content
+          mainContainer.style.display = "flex"; // Revert main container display
+          mainContainer.classList.remove("blur-background");
+        }, 500); // Small delay
+      }
+
+      /**
+       * Triggers printing of both Customer Bill and Kitchen Order Ticket.
+       */
+      function printBothCopies() {
+        // Increment both bill and KOT numbers
+        let lastBillNo = parseInt(localStorage.getItem("lastBillNo")) || 0;
+        localStorage.setItem("lastBillNo", lastBillNo + 1);
+        let lastKOTNo = parseInt(localStorage.getItem("lastKOTNo")) || 0;
+        localStorage.setItem("lastKOTNo", lastKOTNo + 1);
+
+        // Hide the modal and main container
+        printableBillContainer.style.display = "none";
+        mainContainer.style.display = "none";
+
+        // Generate both contents
+        customerPrintOutput.innerHTML = generateCustomerBillContent();
+        kitchenPrintOutput.innerHTML = generateKitchenOrderContent();
+
+        // Make both visible for printing
+        customerPrintOutput.style.display = "block";
+        kitchenPrintOutput.style.display = "block";
+
+        window.print();
+
+        // Revert display after printing
+        setTimeout(() => {
+          customerPrintOutput.style.display = "none";
+          customerPrintOutput.innerHTML = "";
+          kitchenPrintOutput.style.display = "none";
+          kitchenPrintOutput.innerHTML = "";
+          mainContainer.style.display = "flex"; // Revert main container display
+          mainContainer.classList.remove("blur-background");
+        }, 500);
+      }
+
+      // Function to clear the current order
+      async function clearOrder() {
+        if (Object.keys(order).length === 0) {
+          return; // No items to clear
+        }
+        const confirmed = await showCustomConfirm("Are you sure you want to clear the entire order?");
+        if (!confirmed) {
+          return;
+        }
+
+        for (const key in order) {
+          delete order[key];
+        }
+        document.querySelectorAll(".quantity-display").forEach((span) => {
+          span.textContent = 0;
+        });
+        renderBill();
+      }
+
+      // Event listener for the modal to handle closing and printing
+      printableBillContainer.addEventListener("click", (event) => {
+        // Close button or clicking outside the content area
+        if (event.target.classList.contains("bill-close-button") || event.target === printableBillContainer) {
+          mainContainer.classList.remove("blur-background");
+          printableBillContainer.style.display = "none";
+        }
+        // Print buttons are now handled by specific event listeners within generateBill()
+      });
+
+      // Add event listeners to main buttons
+      generateBillBtn.addEventListener("click", generateBill);
+      clearOrderBtn.addEventListener("click", clearOrder);
+
+      // Initial render on page load
+      renderMenu();
+      renderBill();
+    </script>
+  </body>
+</html>
